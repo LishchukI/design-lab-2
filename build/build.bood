@@ -1,10 +1,9 @@
 go_binary {
-  // Module (and output) name.
   name: "bood",
 
-  // Go package to build.
   pkg: "github.com/KPI-Labs/design-lab-2/build/cmd/bood",
+  srcs: ["**/*.go", "../go.mod"],
 
-  // Build inputs.
-  srcs: ["**/*.go", "../go.mod"]
+  testPkg: "github.com/KPI-Labs/design-lab-2/build/cmd/bood",
+  testSrcs: ["**/*_test.go"]
 }
