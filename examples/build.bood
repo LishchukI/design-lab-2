@@ -1,0 +1,6 @@
+test_coverage {
+  name: "test_coverage_example",
+
+  pkg: "github.com/KPI-Labs/design-lab-2/examples/test_coverage_example",
+  srcs: ["**/*.go"],
+}

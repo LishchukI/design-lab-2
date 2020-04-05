@@ -1,4 +1,4 @@
-package test_coverage_module
+package coveragemodule
 
 import (
 	"fmt"
@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	pctx = blueprint.NewPackageContext("github.com/KPI-Labs/design-lab-2/build/test_coverage_module")
+	pctx = blueprint.NewPackageContext("github.com/KPI-Labs/design-lab-2/build/coveragemodule")
 
 	goTestCoverage = pctx.StaticRule("testCoverage", blueprint.RuleParams{
-		Command:     "cd $workDir && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
+		Command:     "cd $workDir && mkdir $outputReports && go test -v $pkg -coverprofile=$outputCoverage && go tool cover -html=$outputCoverage -o $outputHtml",
 		Description: "test coverage for $pkg",
-	}, "workDir", "pkg", "outputCoverage", "outputHtml")
+	}, "workDir", "pkg", "outputCoverage", "outputHtml", "outputReports")
 
 )
 
@@ -44,8 +44,9 @@ func (gb *testCoverageModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 	name := ctx.ModuleName()
 	config := bood.ExtractConfig(ctx)
 
-	pathToCoverageReports := path.Join(config.BaseOutputDir, "reports", fmt.Sprintf("%s.out", name))
-	pathToCoverageHtml := path.Join(config.BaseOutputDir, "reports", fmt.Sprintf("%s.html", name))
+	pathToReports := path.Join(config.BaseOutputDir, "reports")
+	pathToCoverageReports := path.Join(pathToReports, fmt.Sprintf("%s.out", name))
+	pathToCoverageHtml := path.Join(pathToReports, fmt.Sprintf("%s.html", name))
 
 	inputs := convertPatternsIntoPaths(ctx, gb.properties.Srcs, []string{})
 
@@ -56,6 +57,7 @@ func (gb *testCoverageModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 			Outputs:     []string{config.BaseOutputDir},
 			Implicits:   inputs,
 			Args: map[string]string{
+				"outputReports": pathToReports,
 				"outputCoverage": pathToCoverageReports,
 				"outputHtml": pathToCoverageHtml,
 				"workDir":    ctx.ModuleDir(),
@@ -65,7 +67,7 @@ func (gb *testCoverageModule) GenerateBuildActions(ctx blueprint.ModuleContext) 
 	}
 }
 
-func SimpleBinFactory() (blueprint.Module, []interface{}) {
+func TestCoverageFactory() (blueprint.Module, []interface{}) {
 	mType := &testCoverageModule{}
 	return mType, []interface{}{&mType.SimpleName.Properties, &mType.properties}
 }
