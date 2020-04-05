@@ -5,6 +5,7 @@ import (
 	"github.com/google/blueprint"
 	"github.com/roman-mazur/bood"
 	"github.com/KPI-Labs/design-lab-2/build/gomodule"
+	"github.com/KPI-Labs/desigh-lab-2/build/test_coverage_module"
 	"io/ioutil"
 	"log"
 	"os"
@@ -19,6 +20,7 @@ var (
 func NewContext() *blueprint.Context {
 	ctx := bood.PrepareContext()
 	ctx.RegisterModuleType("go_binary", gomodule.SimpleBinFactory)
+	ctx.RegisterModuleType("test_coverage", test_coverage_module.SimpleBinFactory)
 	return ctx
 }
 

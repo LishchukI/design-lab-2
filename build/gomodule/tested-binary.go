@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	pctx = blueprint.NewPackageContext("github.com/roman-mazur/bood/gomodule")
+	pctx = blueprint.NewPackageContext("github.com/KPI-Labs/design-lab-2/build/gomodule")
 
 	goBuild = pctx.StaticRule("binaryBuild", blueprint.RuleParams{
 		Command:     "cd $workDir && go build -o $outputPath $pkg",
@@ -32,10 +32,10 @@ type testedBinaryModule struct {
 	}
 }
 
-func convertPatternsIntoPaths(ctx blueprint.ModuleContext, patterns []string, excludePaterns []string) []string {
+func convertPatternsIntoPaths(ctx blueprint.ModuleContext, patterns []string, excludePatterns []string) []string {
 	var paths []string
 	for _, src := range patterns {
-		if matches, err := ctx.GlobWithDeps(src, excludePaterns); err == nil {
+		if matches, err := ctx.GlobWithDeps(src, excludePatterns); err == nil {
 			paths = append(paths, matches...)
 		} else {
 			ctx.PropertyErrorf("srcs", "Cannot resolve files that match pattern %s", src)
